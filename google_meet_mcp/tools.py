@@ -16,7 +16,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="Create a new Google Meet meeting space",
     )
     def create_meeting_space(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
     ) -> str:
         """
         Returns:
@@ -36,7 +36,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="Retrieve details for a given Google Meet meeting space",
     )
     def get_meeting_space(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(
             description="Space resource name, e.g. `spaces/abc-defg-hij`"
         ),
@@ -56,7 +56,7 @@ def register_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(name="end_meeting_space", description="End a Google Meet meeting space")
     def end_meeting_space(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(
             description="Space resource name, e.g. `spaces/abc-defg-hij`"
         ),
@@ -77,7 +77,7 @@ def register_tools(mcp: FastMCP) -> None:
         name="update_meeting_space", description="Update a Google Meet meeting space"
     )
     def update_meeting_space(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(
             description="Space resource name, e.g. `spaces/abc-defg-hij`"
         ),
@@ -110,7 +110,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get a Google Meet conference record",
     )
     def get_conference_record(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(
             description="Conference record resource name 'conferenceRecords/id' "
         ),
@@ -132,7 +132,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="List Google Meet conference records",
     )
     def list_conference_records(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         page_size: int | None = Field(
             default=None, description="Optional max items per page"
         ),
@@ -161,7 +161,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get a participant from a Google Meet conference record",
     )
     def get_participant(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(description="Participant resource name"),
     ) -> str:
         """
@@ -183,7 +183,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="List participants from a Google Meet conference record",
     )
     def list_participants(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         parent: str = Field(description="Parent conference record resource name"),
         page_size: int | None = Field(
             default=None, description="Optional max items per page"
@@ -222,7 +222,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="Get a participant session from a Google Meet conference record by participant session ID.",
     )
     def get_participant_session(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         name: str = Field(description="Participant session resource name"),
     ) -> str:
         """
@@ -248,7 +248,7 @@ def register_tools(mcp: FastMCP) -> None:
         description="List participant sessions of a participant from a Google Meet conference record",
     )
     def list_participant_sessions(
-        oauth_token: OAuthTokenData = Field(description="OAuth token"),
+        oauth_token: OAuthTokenData = Field( ... , description="OAuth token"),
         parent: str = Field(description="Parent participant resource name"),
         page_size: int | None = Field(
             default=None, description="Optional max items per page"
