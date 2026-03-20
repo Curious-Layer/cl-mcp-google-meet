@@ -1,8 +1,8 @@
 # Google Meet MCP Server
 
-**Bring Google Meet meeting management and conference analytics into your AI workflows.**
+**Manage Google Meet spaces and access conference analytics via API.**
 
-A Model Context Protocol (MCP) server that exposes Google Meet's API for creating, managing, and analyzing meeting spaces and conference records—all accessible through Claude Desktop and other MCP clients.
+A Model Context Protocol (MCP) server that exposes Google Meet's API for creating, managing, and analyzing meeting spaces and conference records.
 
 ---
 
@@ -20,94 +20,18 @@ Perfect for:
 - Post-meeting analytics and reporting
 - Building AI-driven meeting orchestration tools
 
-**Supported Clients:** Claude Desktop, MCP-compatible tools over HTTP/SSE
-
 ---
 
-## Quick Start (Local Setup)
+## Tools
 
-### Prerequisites
-
-- **Python 3.10+**
-- **pip** package manager
-- **Google Cloud project** with Google Meet API enabled
-- **OAuth 2.0 credentials** (Service Account or User Account)
-
-### 1. Install Dependencies
-
-```bash
-cd /home/stark/Code/Curious Layer/CL-RAG
-pip install fastmcp pydantic google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-```
-
-### 2. Set Up OAuth Credentials
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the **Google Meet API**
-4. Create OAuth 2.0 credentials:
-   - For CLI/local: Create a **Desktop** application
-   - Download the credentials JSON file
-5. Save as `google_meet_credentials.json` in your project root
-
-### 3. Environment Setup
-
-```bash
-export GOOGLE_MEET_CREDENTIALS_PATH="/path/to/google_meet_credentials.json"
-export MCP_TRANSPORT="stdio"  # or "streamable-http"
-```
-
-### 4. Run the Server
-
-```bash
-python MEWCP/SERVER_STRUCTURE.py --transport stdio
-```
-
-For HTTP mode:
-
-```bash
-python MEWCP/SERVER_STRUCTURE.py --transport streamable-http --host 0.0.0.0 --port 8000
-```
-
-### 5. Configure Claude Desktop
-
-Create or edit `~/.config/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "google-meet": {
-      "command": "python",
-      "args": [
-        "/home/stark/Code/Curious Layer/CL-RAG/MEWCP/SERVER_STRUCTURE.py",
-        "--transport",
-        "stdio"
-      ],
-      "env": {
-        "GOOGLE_MEET_CREDENTIALS_PATH": "/path/to/google_meet_credentials.json"
-      }
-    }
-  }
-}
-```
-
-Restart Claude Desktop to load the server.
-
----
-
-## Tool Reference
-
-### Meeting Space Management
-
-#### `create_meeting_space`
-
-**Create a new Google Meet meeting space**
+<details>
+<summary><code>create_meeting_space</code> — Create a new Google Meet meeting space</summary>
 
 **Inputs:**
 
 - `oauth_token` (string, required) — Valid Google OAuth token with Meet API scopes
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -115,29 +39,29 @@ Restart Claude Desktop to load the server.
 }
 ```
 
-**Example:**
+**Usage Example:**
 
-```json
+```bash
+POST /mcp/google-meet/create_meeting_space
+
 {
-  "tool": "create_meeting_space",
-  "input": {
-    "oauth_token": "ya29.a0AfH6SMB..."
-  }
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
 }
 ```
 
+</details>
+
 ---
 
-#### `get_meeting_space`
-
-**Retrieve details for a Google Meet meeting space**
+<details>
+<summary><code>get_meeting_space</code> — Retrieve details for a given Google Meet meeting space</summary>
 
 **Inputs:**
 
 - `name` (string, required) — Space resource name, e.g., `spaces/abc-defg-hij`
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -145,23 +69,23 @@ Restart Claude Desktop to load the server.
 }
 ```
 
-**Example:**
+**Usage Example:**
 
-```json
+```bash
+POST /mcp/google-meet/get_meeting_space
+
 {
-  "tool": "get_meeting_space",
-  "input": {
-    "name": "spaces/abc-defg-hij",
-    "oauth_token": "ya29.a0AfH6SMB..."
-  }
+  "name": "spaces/abc-defg-hij",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
 }
 ```
 
+</details>
+
 ---
 
-#### `update_meeting_space`
-
-**Update a Google Meet meeting space**
+<details>
+<summary><code>update_meeting_space</code> — Update a Google Meet meeting space</summary>
 
 **Inputs:**
 
@@ -170,7 +94,7 @@ Restart Claude Desktop to load the server.
 - `space` (string, required) — JSON string body with updated fields
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -178,32 +102,32 @@ Restart Claude Desktop to load the server.
 }
 ```
 
-**Example:**
+**Usage Example:**
 
-```json
+```bash
+POST /mcp/google-meet/update_meeting_space
+
 {
-  "tool": "update_meeting_space",
-  "input": {
-    "name": "spaces/abc-defg-hij",
-    "update_mask": "config.access_settings",
-    "space": "{\"config\": {\"access_settings\": {\"access_level\": \"OPEN\"}}}",
-    "oauth_token": "ya29.a0AfH6SMB..."
-  }
+  "name": "spaces/abc-defg-hij",
+  "update_mask": "config.access_settings",
+  "space": "{\"config\": {\"access_settings\": {\"access_level\": \"OPEN\"}}}",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
 }
 ```
 
+</details>
+
 ---
 
-#### `end_meeting_space`
-
-**End a Google Meet meeting space**
+<details>
+<summary><code>end_meeting_space</code> — End a Google Meet meeting space</summary>
 
 **Inputs:**
 
 - `name` (string, required) — Space resource name, e.g., `spaces/abc-defg-hij`
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -211,20 +135,30 @@ Restart Claude Desktop to load the server.
 }
 ```
 
+**Usage Example:**
+
+```bash
+POST /mcp/google-meet/end_meeting_space
+
+{
+  "name": "spaces/abc-defg-hij",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
+```
+
+</details>
+
 ---
 
-### Conference Records & Analytics
-
-#### `get_conference_record`
-
-**Retrieve a Google Meet conference record**
+<details>
+<summary><code>get_conference_record</code> — Retrieve a Google Meet conference record</summary>
 
 **Inputs:**
 
 - `name` (string, required) — Conference record resource name, e.g., `conferenceRecords/abc123def456`
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -232,11 +166,23 @@ Restart Claude Desktop to load the server.
 }
 ```
 
+**Usage Example:**
+
+```bash
+POST /mcp/google-meet/get_conference_record
+
+{
+  "name": "conferenceRecords/abc123def456",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
+```
+
+</details>
+
 ---
 
-#### `list_conference_records`
-
-**List Google Meet conference records**
+<details>
+<summary><code>list_conference_records</code> — List Google Meet conference records</summary>
 
 **Inputs:**
 
@@ -244,7 +190,7 @@ Restart Claude Desktop to load the server.
 - `page_token` (string, optional) — Pagination token from previous response
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -252,32 +198,30 @@ Restart Claude Desktop to load the server.
 }
 ```
 
-**Example:**
+**Usage Example:**
 
-```json
+```bash
+POST /mcp/google-meet/list_conference_records
+
 {
-  "tool": "list_conference_records",
-  "input": {
-    "page_size": 10,
-    "oauth_token": "ya29.a0AfH6SMB..."
-  }
+  "page_size": 10,
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
 }
 ```
 
+</details>
+
 ---
 
-### Participant Management
-
-#### `get_participant`
-
-**Get a participant from a Google Meet conference record**
+<details>
+<summary><code>get_participant</code> — Get a participant from a Google Meet conference record</summary>
 
 **Inputs:**
 
 - `name` (string, required) — Participant resource name
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -285,11 +229,23 @@ Restart Claude Desktop to load the server.
 }
 ```
 
+**Usage Example:**
+
+```bash
+POST /mcp/google-meet/get_participant
+
+{
+  "name": "conferenceRecords/abc123/participants/xyz789",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
+```
+
+</details>
+
 ---
 
-#### `list_participants`
-
-**List participants from a Google Meet conference record**
+<details>
+<summary><code>list_participants</code> — List participants from a Google Meet conference record</summary>
 
 **Inputs:**
 
@@ -299,7 +255,7 @@ Restart Claude Desktop to load the server.
 - `filter` (string, optional) — API filter expression
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -307,18 +263,31 @@ Restart Claude Desktop to load the server.
 }
 ```
 
+**Usage Example:**
+
+```bash
+POST /mcp/google-meet/list_participants
+
+{
+  "parent": "conferenceRecords/abc123",
+  "page_size": 25,
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
+```
+
+</details>
+
 ---
 
-#### `get_participant_session`
-
-**Get a participant session by ID**
+<details>
+<summary><code>get_participant_session</code> — Get a participant session by ID</summary>
 
 **Inputs:**
 
 - `name` (string, required) — Participant session resource name
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -326,11 +295,23 @@ Restart Claude Desktop to load the server.
 }
 ```
 
+**Usage Example:**
+
+```bash
+POST /mcp/google-meet/get_participant_session
+
+{
+  "name": "conferenceRecords/abc123/participants/xyz789/participantSessions/session-001",
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
+```
+
+</details>
+
 ---
 
-#### `list_participant_sessions`
-
-**List participant sessions**
+<details>
+<summary><code>list_participant_sessions</code> — List participant sessions of a participant from a Google Meet conference record</summary>
 
 **Inputs:**
 
@@ -340,7 +321,7 @@ Restart Claude Desktop to load the server.
 - `filter` (string, optional) — API filter expression
 - `oauth_token` (string, required) — Valid Google OAuth token
 
-**Outputs:**
+**Output:**
 
 ```json
 {
@@ -348,185 +329,155 @@ Restart Claude Desktop to load the server.
 }
 ```
 
----
-
-## Integration Examples
-
-### Claude Desktop Example
-
-```
-User: "Create a new Google Meet space and tell me the details"
-
-Claude uses:
-→ create_meeting_space(oauth_token)
-→ Returns: Space ID, meeting link
-→ Displays: "✓ Meeting created: meet.google.com/abc-defg-hij"
-```
-
-### Automated Reporting Example
-
-```python
-# List all conferences from the past week
-list_conference_records(page_size=50)
-
-# For each conference, get participants
-list_participants(parent=conferenceId, page_size=100)
-
-# Generate report with attendee analytics
-```
-
-### HTTP/SSE Integration
+**Usage Example:**
 
 ```bash
-# Start server in HTTP mode
-python MEWCP/SERVER_STRUCTURE.py --transport streamable-http --port 8000
+POST /mcp/google-meet/list_participant_sessions
 
-# Call tool via HTTP
-curl -X POST http://localhost:8000/tools/list_conference_records \
-  -H "Content-Type: application/json" \
-  -d '{"page_size": 10}'
+{
+  "parent": "conferenceRecords/abc123/participants/xyz789",
+  "page_size": 50,
+  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+}
 ```
 
----
-
-## Troubleshooting
-
-### **"Invalid OAuth Token" Error**
-
-- **Cause:** Token expired or invalid scopes
-- **Solution:**
-  1. Re-authenticate with Google account
-  2. Ensure scopes include:
-     - `https://www.xyxapi.com/auth/meetings.space.created`
-     - `https://www.xyxapi.com/auth/meetings.space.readonly`
-
-### **"Permission Denied" Error**
-
-- **Cause:** Insufficient permissions on the meeting space
-- **Solution:**
-  - Verify you have owner/editor access to the space
-  - Check Google Cloud IAM permissions
-
-### **"404 – Space Not Found" Error**
-
-- **Cause:** Invalid space resource name or space was deleted
-- **Solution:**
-  - Confirm space ID format: `spaces/abc-defg-hij`
-  - Use `list_conference_records` to verify valid resources
-
-### **Connection Issues**
-
-- **Port already in use:**
-  ```bash
-  lsof -i :8000
-  kill -9 <PID>
-  ```
-- **Python version mismatch:**
-  ```bash
-  python --version  # Ensure 3.10+
-  ```
-- **Firewall blocking HTTP:**
-  - Allow port 8000 in your firewall settings
-  - Use stdio transport for local development
+</details>
 
 ---
 
-## API Parameters Reference
+<details>
+<summary><strong>API Parameters Reference</strong></summary>
 
-### Common Pagination Parameters
+### Pagination
 
-| Parameter    | Type    | Description                  | Example           |
-| ------------ | ------- | ---------------------------- | ----------------- |
-| `page_size`  | integer | Max results per page (1–100) | `25`              |
-| `page_token` | string  | Token from previous response | `"next_page_123"` |
-| `filter`     | string  | CEL filter expression        | `"status=ACTIVE"` |
+- `page_size` — Max results per page (1–100)
+- `page_token` — Token from previous response for next page
+- `filter` — CEL filter expression for results
 
-### Space Resource Format
+### Resource Formats
+
+**Space Resource:**
 
 ```
 spaces/{SPACE_ID}
 Example: spaces/abc-defg-hij
 ```
 
-### Conference Record Resource Format
+**Conference Record Resource:**
 
 ```
 conferenceRecords/{RECORD_ID}
 Example: conferenceRecords/abc123def456ghi789
 ```
 
-### Participant Resource Format
+**Participant Resource:**
 
 ```
 conferenceRecords/{RECORD_ID}/participants/{PARTICIPANT_ID}
 Example: conferenceRecords/abc123/participants/xyz789
 ```
 
----
+**Participant Session Resource:**
 
-## Security Notes
+```
+conferenceRecords/{RECORD_ID}/participants/{PARTICIPANT_ID}/participantSessions/{SESSION_ID}
+Example: conferenceRecords/abc123/participants/xyz789/participantSessions/session-001
+```
 
-⚠️ **Important Security Practices:**
-
-1. **Never commit credentials** — Add `google_meet_credentials.json` to `.gitignore`
-
-   ```bash
-   echo "google_meet_credentials.json" >> .gitignore
-   ```
-
-2. **Use environment variables** — Store token paths and secrets in `.env`
-
-   ```bash
-   GOOGLE_MEET_CREDENTIALS_PATH="/secure/path/credentials.json"
-   MCP_AUTH_TOKEN="your_secure_token"
-   ```
-
-3. **Token expiration** — OAuth tokens expire; implement refresh:
-
-   ```python
-   if token_expired():
-       refresh_google_oauth_token()
-   ```
-
-4. **HTTPS in production** — Always use TLS/SSL:
-
-   ```bash
-   python SERVER_STRUCTURE.py --transport streamable-http --ssl-cert /path/to/cert.pem
-   ```
-
-5. **Least privilege** — Request only required OAuth scopes
+</details>
 
 ---
 
-## Architecture
+<details>
+<summary><strong>OAuth Guide</strong></summary>
 
-The Google Meet MCP Server follows a **stateless, multi-user design**:
+All tools require a valid Google OAuth token. Here's how to obtain one:
 
-**Key Design Principles:**
+### Step 1: Create Google Cloud Project
 
-- **No session storage** — Each request is independent
-- **Horizontally scalable** — Run multiple instances without shared state
-- **OAuth per-request** — Token passed with each tool call
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the **Google Meet API**
+
+### Step 2: Create OAuth 2.0 Credentials
+
+1. Navigate to **Credentials** in Google Cloud Console
+2. Click **+ Create Credentials** → **OAuth client ID**
+3. Select your application type (Desktop, Web, or other)
+4. Download the credentials JSON file
+
+### Step 3: Authenticate with Google
+
+Use your Google account to authenticate and obtain the OAuth token. Refer to [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2) for detailed authentication steps specific to your use case.
+
+### Step 4: Required Scopes
+
+Ensure your OAuth token has these scopes:
+
+- `https://www.googleapis.com/auth/meetings.space.create` — Create meeting spaces
+- `https://www.googleapis.com/auth/meetings.space.readonly` — Read meeting spaces and records
+- `https://www.googleapis.com/auth/meetings.conference.readonly` — Read conference records
+- `https://www.googleapis.com/auth/meetings.participants.readonly` — Read participant data
+
+</details>
 
 ---
 
-## Resources
+<details>
+<summary><strong>Troubleshooting</strong></summary>
+
+### **Missing or Invalid API Key**
+
+- **Cause:** API key not provided in request headers or incorrect format
+- **Solution:**
+  1. Verify `Authorization: Bearer YOUR_API_KEY` header is present
+  2. Check API key is active in your Curious Layer account
+  3. Regenerate API key if expired
+
+### **Insufficient Credits**
+
+- **Cause:** API calls have exceeded your requests limits
+- **Solution:**
+  1. Check credit usage in your Curious Layer dashboard
+  2. Upgrade to a paid plan or add credits for higher limits
+  3. Contact support for credit adjustments
+
+### **Malformed Request Payload**
+
+- **Cause:** JSON payload is invalid or missing required fields
+- **Solution:**
+  1. Validate JSON syntax before sending
+  2. Ensure all required tool parameters are included
+  3. Check parameter types match expected values (string, integer, etc.)
+
+### **Server Not Found**
+
+- **Cause:** Incorrect server name in the API endpoint
+- **Solution:**
+  1. Verify endpoint format: `/mcp/{server-name}/{tool-name}`
+  2. Use lowercase server name: `/mcp/google-meet/...`
+  3. Check available servers in documentation
+
+### **OAuth Token Invalid or Expired**
+
+- **Cause:** Token rejected by Google API or has expired
+- **Solution:**
+  1. Obtain a fresh OAuth token from Google
+  2. Verify token has all required scopes
+  3. Check token expiration and refresh if needed
+
+</details>
+
+---
+
+<details>
+<summary><strong>Resources</strong></summary>
 
 - **[Google Meet API Documentation](https://developers.google.com/meet/api/guides)** — Official API reference
-- **[Google Cloud OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)** — Authentication setup
-- **[Model Context Protocol Docs](https://modelcontextprotocol.io/)** — MCP specification
-- **[FastMCP Documentation](https://github.com/jlowin/fastmcp)** — FastMCP framework guide
+- **[Google Cloud OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)** — Authentication setup guide
+- **[Google Meet API Reference](https://developers.google.com/meet/api/v2/reference)** — Complete API endpoint reference
+- **[FastMCO Docs](https://gofastmcp.com/v2/getting-started/welcome)** — FastMCP specification
 
----
-
-## Contributing & License
-
-**We welcome contributions!**
-
-- Report issues or request features via GitHub Issues
-- Submit pull requests for bug fixes or enhancements
-- Follow existing code style and add tests for new features
-
-**License:** MIT
+</details>
 
 ---
