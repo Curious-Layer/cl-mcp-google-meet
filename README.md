@@ -345,6 +345,8 @@ POST /mcp/google-meet/list_participant_sessions
 
 ---
 
+## Reference & Support
+
 <details>
 <summary><strong>API Parameters Reference</strong></summary>
 
