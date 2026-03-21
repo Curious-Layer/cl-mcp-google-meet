@@ -476,7 +476,7 @@ Ensure your OAuth token has these scopes:
 - **[Google Meet API Documentation](https://developers.google.com/meet/api/guides)** — Official API reference
 - **[Google Cloud OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)** — Authentication setup guide
 - **[Google Meet API Reference](https://developers.google.com/meet/api/v2/reference)** — Complete API endpoint reference
-- **[FastMCO Docs](https://gofastmcp.com/v2/getting-started/welcome)** — FastMCP specification
+- **[FastMCP Docs](https://gofastmcp.com/v2/getting-started/welcome)** — FastMCP specification
 
 </details>
 
