@@ -1,5 +1,3 @@
-# Google Meet MCP Server
-
 **Manage Google Meet spaces and access conference analytics via API.**
 
 A Model Context Protocol (MCP) server that exposes Google Meet's API for creating, managing, and analyzing meeting spaces and conference records.
