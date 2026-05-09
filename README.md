@@ -276,7 +276,6 @@ Returns a paginated list of all sessions for a given participant in a conference
 
 </details>
 
----
 
 ## API Parameters Reference
 <details>
@@ -322,7 +321,6 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
 
 </details>
 
----
 
 ## Troubleshooting
 
@@ -393,14 +391,12 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
 </details>
 
 
----
 
-<details>
-<summary><strong>Resources</strong></summary>
+### Resources
 
 - **[Google Meet API Documentation](https://developers.google.com/meet/api/guides/overview)** — Official API reference
 - **[Google Meet API Reference](https://developers.google.com/meet/api/reference/rest)** — Complete endpoint reference
 - **[FastMCP Docs](https://gofastmcp.com/v2/getting-started/welcome)** — FastMCP specification
 - **[FastMCP Credentials](https://pypi.org/project/fastmcp-credentials/)** — FastMCP Credentials package for credential handling
 
-</details>
+
