@@ -2,7 +2,6 @@
 
 A Model Context Protocol (MCP) server that exposes Google Meet's API for creating meeting spaces, managing conference records, and retrieving participant information.
 
----
 
 ## Overview
 
@@ -18,7 +17,6 @@ Perfect for:
 - Building assistants that can schedule, start, and end Meet sessions
 - Analyzing meeting attendance and participant data in LLM-powered pipelines
 
----
 
 ## Tools
 
