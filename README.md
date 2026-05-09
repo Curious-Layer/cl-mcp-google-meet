@@ -279,17 +279,20 @@ Returns a paginated list of all sessions for a given participant in a conference
 </details>
 
 ---
-<details>
-<summary><strong>API Parameters Reference</strong></summary>
 
-### Common Parameters
+## API Parameters Reference
+<details>
+<summary><strong>Common Parameters</strong></summary>
 
 - `name` — Full resource name identifying a Meet object. Always returned in API responses and used as the identifier for subsequent calls.
 - `page_size` — Limits the number of items returned per page. If omitted, the API uses its default page size.
 - `page_token` — Token from a previous paginated response. Pass it to retrieve the next page of results.
 - `filter` — Standard API filter expression for narrowing list results.
 
-### Resource Name Formats
+</details>
+
+<details>
+<summary><strong>Resource Name Formats</strong></summary>
 
 **Meeting Space:**
 
@@ -323,17 +326,21 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
 
 ---
 
-<details>
-<summary><strong>Troubleshooting</strong></summary>
+## Troubleshooting
 
-### **Missing or Invalid Headers**
+<details>
+<summary><strong>Missing or Invalid Headers</strong></summary>
+
 
 - **Cause:** API key not provided in request headers or incorrect format
 - **Solution:**
   1. Verify `Authorization: Bearer YOUR_API_KEY` and `X-Mewcp-Credential-Id: CREDENTIAL-ID` headers are present
   2. Check API key is active in your MewCP account
 
-### **Insufficient Credits**
+</details>
+
+<details>
+<summary><strong>Insufficient Credits</strong></summary>
 
 - **Cause:** API calls have exceeded your request limits
 - **Solution:**
@@ -341,7 +348,10 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
   2. Upgrade to a paid plan or add credits for higher limits
   3. Contact support for credit adjustments
 
-### **Credential Not Connected**
+</details>
+
+<details>
+<summary><strong>Credential Not Connected</strong></summary>
 
 - **Cause:** No Google credential linked to your account
 - **Solution:**
@@ -349,7 +359,10 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
   2. Connect your Google account via OAuth
   3. Retry the request with the correct `X-Mewcp-Credential-Id` header
 
-### **Malformed Request Payload**
+</details>
+
+<details>
+<summary><strong>Malformed Request Payload</strong></summary>
 
 - **Cause:** JSON payload is invalid or missing required fields
 - **Solution:**
@@ -357,7 +370,10 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
   2. Ensure all required tool parameters are included
   3. Check parameter types match expected values
 
-### **Server Not Found**
+</details>
+
+<details>
+<summary><strong>Server Not Found</strong></summary>
 
 - **Cause:** Incorrect server name in the API endpoint
 - **Solution:**
@@ -365,7 +381,10 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
   2. Use correct server name from documentation
   3. Check available servers in your Curious Layer account
 
-### **Google Meet API Error**
+</details>
+
+<details>
+<summary><strong>Google Meet API Error</strong></summary>
 
 - **Cause:** Upstream Google Meet API returned an error
 - **Solution:**
@@ -374,6 +393,7 @@ Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
   3. Review the error message for specific details
 
 </details>
+
 
 ---
 
