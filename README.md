@@ -44,7 +44,7 @@ None
 
 </details>
 
----
+
 
 <details>
 <summary><code>get_meeting_space</code> — Retrieve details for a Google Meet meeting space</summary>
@@ -69,7 +69,6 @@ Fetches the current details of an existing meeting space by its resource name.
 
 </details>
 
----
 
 <details>
 <summary><code>end_meeting_space</code> — End a Google Meet meeting space</summary>
