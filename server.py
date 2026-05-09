@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP Server for Google Meet API."""
+"""MCP Server for Google Drive API."""
 
 import logging
 
@@ -8,11 +8,16 @@ from fastmcp import FastMCP
 from google_meet_mcp.cli import parse_args
 from google_meet_mcp.config import configure_logging
 from google_meet_mcp.tools import register_tools
+from fastmcp_credentials import HeaderCredentialBackend, CredentialMiddleware
+
 
 configure_logging()
 logger = logging.getLogger("google-meet-mcp-server")
 
-mcp = FastMCP("CL Google Meet MCP Server")
+backend = HeaderCredentialBackend()
+mcp = FastMCP(
+    "CL Google Meet MCP Server", middleware=[CredentialMiddleware(backend, "oauth")]
+)
 register_tools(mcp)
 
 # Expose ASGI app for hosting platform's (e.g. Vercel) Python runtime.
