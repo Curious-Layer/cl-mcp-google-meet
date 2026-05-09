@@ -88,7 +88,7 @@ Ends an active meeting space, disconnecting all participants.
 
 </details>
 
----
+
 
 <details>
 <summary><code>update_meeting_space</code> — Update a Google Meet meeting space</summary>
@@ -114,7 +114,6 @@ Patches one or more fields of an existing meeting space using a field mask.
 
 </details>
 
----
 
 <details>
 <summary><code>get_conference_record</code> — Get a Google Meet conference record</summary>
@@ -139,7 +138,6 @@ Retrieves a single conference record by its resource name.
 
 </details>
 
----
 
 <details>
 <summary><code>list_conference_records</code> — List Google Meet conference records</summary>
@@ -170,8 +168,6 @@ Returns a paginated list of past conference records for the authenticated user.
 
 </details>
 
----
-
 <details>
 <summary><code>get_participant</code> — Get a participant from a conference record</summary>
 
@@ -198,7 +194,6 @@ Retrieves details of a single participant from a conference record.
 
 </details>
 
----
 
 <details>
 <summary><code>list_participants</code> — List participants from a conference record</summary>
@@ -229,7 +224,6 @@ Returns a paginated list of participants for a given conference record.
 
 </details>
 
----
 
 <details>
 <summary><code>get_participant_session</code> — Get a participant session from a conference record</summary>
@@ -253,7 +247,6 @@ Retrieves a single participant session, representing one continuous join/leave i
 
 </details>
 
----
 
 <details>
 <summary><code>list_participant_sessions</code> — List participant sessions of a participant</summary>
@@ -286,7 +279,6 @@ Returns a paginated list of all sessions for a given participant in a conference
 </details>
 
 ---
-
 <details>
 <summary><strong>API Parameters Reference</strong></summary>
 
