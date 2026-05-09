@@ -1,22 +1,22 @@
-**Manage Google Meet spaces and access conference analytics via API.**
+**Create, manage, and inspect Google Meet sessions — directly from your AI workflows.**
 
-A Model Context Protocol (MCP) server that exposes Google Meet's API for creating, managing, and analyzing meeting spaces and conference records.
+A Model Context Protocol (MCP) server that exposes Google Meet's API for creating meeting spaces, managing conference records, and retrieving participant information.
 
 ---
 
 ## Overview
 
-The Google Meet MCP Server provides stateless, multi-user access to Google Meet's core operations:
+The Google Meet MCP Server provides full programmatic access to Google Meet through a stateless, multi-tenant interface:
 
-- **Meeting Space Management** — Create, retrieve, update, and end virtual meeting spaces
-- **Conference Analytics** — Access detailed conference records, participant data, and session history
-- **Participant Tracking** — Query participant details and session information
+- Create, update, and end Google Meet meeting spaces
+- Retrieve conference records and meeting history
+- List and inspect participants and their session details
 
 Perfect for:
 
-- Automated meeting scheduling and lifecycle management
-- Post-meeting analytics and reporting
-- Building AI-driven meeting orchestration tools
+- Automating meeting creation and management from AI agents
+- Building assistants that can schedule, start, and end Meet sessions
+- Analyzing meeting attendance and participant data in LLM-powered pipelines
 
 ---
 
@@ -25,25 +25,20 @@ Perfect for:
 <details>
 <summary><code>create_meeting_space</code> — Create a new Google Meet meeting space</summary>
 
-**Inputs:**
+Creates a new Google Meet meeting space and returns its details including the join link.
 
-- `oauth_token` (string, required) — Valid Google OAuth token with Meet API scopes
+**Inputs:**
+```
+None
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Space resource details including ID and meeting link"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/create_meeting_space
-
-{
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "name": "spaces/abc-defg-hij",
+  "meetingUri": "https://meet.google.com/abc-defg-hij",
+  "meetingCode": "abc-defg-hij"
 }
 ```
 
@@ -52,64 +47,23 @@ POST /mcp/google-meet/create_meeting_space
 ---
 
 <details>
-<summary><code>get_meeting_space</code> — Retrieve details for a given Google Meet meeting space</summary>
+<summary><code>get_meeting_space</code> — Retrieve details for a Google Meet meeting space</summary>
+
+Fetches the current details of an existing meeting space by its resource name.
 
 **Inputs:**
-
-- `name` (string, required) — Space resource name, e.g., `spaces/abc-defg-hij`
-- `oauth_token` (string, required) — Valid Google OAuth token
+```
+- `name` (string, required) — Space resource name e.g. `spaces/abc-defg-hij`
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Space configuration and metadata"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/get_meeting_space
-
-{
   "name": "spaces/abc-defg-hij",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
-}
-```
-
-</details>
-
----
-
-<details>
-<summary><code>update_meeting_space</code> — Update a Google Meet meeting space</summary>
-
-**Inputs:**
-
-- `name` (string, required) — Space resource name, e.g., `spaces/abc-defg-hij`
-- `update_mask` (string, required) — Comma-separated field mask, e.g., `config.access_settings,display_settings`
-- `space` (string, required) — JSON string body with updated fields
-- `oauth_token` (string, required) — Valid Google OAuth token
-
-**Output:**
-
-```json
-{
-  "result": "Updated space configuration"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/update_meeting_space
-
-{
-  "name": "spaces/abc-defg-hij",
-  "update_mask": "config.access_settings",
-  "space": "{\"config\": {\"access_settings\": {\"access_level\": \"OPEN\"}}}",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "meetingUri": "https://meet.google.com/abc-defg-hij",
+  "meetingCode": "abc-defg-hij",
+  "config": { "accessType": "OPEN" }
 }
 ```
 
@@ -120,27 +74,42 @@ POST /mcp/google-meet/update_meeting_space
 <details>
 <summary><code>end_meeting_space</code> — End a Google Meet meeting space</summary>
 
-**Inputs:**
+Ends an active meeting space, disconnecting all participants.
 
-- `name` (string, required) — Space resource name, e.g., `spaces/abc-defg-hij`
-- `oauth_token` (string, required) — Valid Google OAuth token
+**Inputs:**
+```
+- `name` (string, required) — Space resource name e.g. `spaces/abc-defg-hij`
+```
+
+**Output:**
+
+```json
+{}
+```
+
+</details>
+
+---
+
+<details>
+<summary><code>update_meeting_space</code> — Update a Google Meet meeting space</summary>
+
+Patches one or more fields of an existing meeting space using a field mask.
+
+**Inputs:**
+```
+- `name` (string, required) — Space resource name e.g. `spaces/abc-defg-hij`
+- `update_mask` (string, required) — Comma-separated field mask for the patch operation e.g. `config.accessType`
+- `space` (string, required) — JSON string containing the updated space fields e.g. `{"config": {"accessType": "TRUSTED"}}`
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Confirmation of space termination"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/end_meeting_space
-
-{
   "name": "spaces/abc-defg-hij",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "meetingUri": "https://meet.google.com/abc-defg-hij",
+  "config": { "accessType": "TRUSTED" }
 }
 ```
 
@@ -149,29 +118,23 @@ POST /mcp/google-meet/end_meeting_space
 ---
 
 <details>
-<summary><code>get_conference_record</code> — Retrieve a Google Meet conference record</summary>
+<summary><code>get_conference_record</code> — Get a Google Meet conference record</summary>
+
+Retrieves a single conference record by its resource name.
 
 **Inputs:**
-
-- `name` (string, required) — Conference record resource name, e.g., `conferenceRecords/abc123def456`
-- `oauth_token` (string, required) — Valid Google OAuth token
+```
+- `name` (string, required) — Conference record resource name e.g. `conferenceRecords/abc123`
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Conference metadata including start time, duration, participant count"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/get_conference_record
-
-{
-  "name": "conferenceRecords/abc123def456",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "name": "conferenceRecords/abc123",
+  "startTime": "2024-03-20T10:00:00.000Z",
+  "endTime": "2024-03-20T11:00:00.000Z",
+  "space": "spaces/abc-defg-hij"
 }
 ```
 
@@ -182,28 +145,27 @@ POST /mcp/google-meet/get_conference_record
 <details>
 <summary><code>list_conference_records</code> — List Google Meet conference records</summary>
 
-**Inputs:**
+Returns a paginated list of past conference records for the authenticated user.
 
-- `page_size` (integer, optional) — Max items per page (default: null)
-- `page_token` (string, optional) — Pagination token from previous response
-- `oauth_token` (string, required) — Valid Google OAuth token
+**Inputs:**
+```
+- `page_size` (integer, optional) — Maximum number of records per page
+- `page_token` (string, optional) — Pagination token from a previous response
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Array of conference records with pagination info"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/list_conference_records
-
-{
-  "page_size": 10,
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "conferenceRecords": [
+    {
+      "name": "conferenceRecords/abc123",
+      "startTime": "2024-03-20T10:00:00.000Z",
+      "endTime": "2024-03-20T11:00:00.000Z",
+      "space": "spaces/abc-defg-hij"
+    }
+  ],
+  "nextPageToken": "token123"
 }
 ```
 
@@ -212,29 +174,26 @@ POST /mcp/google-meet/list_conference_records
 ---
 
 <details>
-<summary><code>get_participant</code> — Get a participant from a Google Meet conference record</summary>
+<summary><code>get_participant</code> — Get a participant from a conference record</summary>
+
+Retrieves details of a single participant from a conference record.
 
 **Inputs:**
-
-- `name` (string, required) — Participant resource name
-- `oauth_token` (string, required) — Valid Google OAuth token
+```
+- `name` (string, required) — Participant resource name e.g. `conferenceRecords/abc123/participants/xyz`
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Participant details (name, email, join/leave times)"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/get_participant
-
-{
-  "name": "conferenceRecords/abc123/participants/xyz789",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "name": "conferenceRecords/abc123/participants/xyz",
+  "signedinUser": {
+    "user": "users/123",
+    "displayName": "Jane Doe"
+  },
+  "earliestStartTime": "2024-03-20T10:02:00.000Z",
+  "latestEndTime": "2024-03-20T10:58:00.000Z"
 }
 ```
 
@@ -243,181 +202,131 @@ POST /mcp/google-meet/get_participant
 ---
 
 <details>
-<summary><code>list_participants</code> — List participants from a Google Meet conference record</summary>
+<summary><code>list_participants</code> — List participants from a conference record</summary>
+
+Returns a paginated list of participants for a given conference record.
 
 **Inputs:**
+```
+- `parent` (string, required) — Parent conference record resource name e.g. `conferenceRecords/abc123`
+- `page_size` (integer, optional) — Maximum number of participants per page
+- `page_token` (string, optional) — Pagination token from a previous response
+- `filter` (string, optional) — API filter expression e.g. `signedinUser.user='users/123'`
+```
 
-- `parent` (string, required) — Parent conference record resource name, e.g., `conferenceRecords/abc123`
-- `page_size` (integer, optional) — Max items per page
-- `page_token` (string, optional) — Pagination token
+**Output:**
+
+```json
+{
+  "participants": [
+    {
+      "name": "conferenceRecords/abc123/participants/xyz",
+      "signedinUser": { "displayName": "Jane Doe" }
+    }
+  ],
+  "nextPageToken": "token123"
+}
+```
+
+</details>
+
+---
+
+<details>
+<summary><code>get_participant_session</code> — Get a participant session from a conference record</summary>
+
+Retrieves a single participant session, representing one continuous join/leave interval.
+
+**Inputs:**
+```
+- `name` (string, required) — Participant session resource name e.g. `conferenceRecords/abc123/participants/xyz/participantSessions/session1`
+```
+
+**Output:**
+
+```json
+{
+  "name": "conferenceRecords/abc123/participants/xyz/participantSessions/session1",
+  "startTime": "2024-03-20T10:02:00.000Z",
+  "endTime": "2024-03-20T10:30:00.000Z"
+}
+```
+
+</details>
+
+---
+
+<details>
+<summary><code>list_participant_sessions</code> — List participant sessions of a participant</summary>
+
+Returns a paginated list of all sessions for a given participant in a conference record.
+
+**Inputs:**
+```
+- `parent` (string, required) — Parent participant resource name e.g. `conferenceRecords/abc123/participants/xyz`
+- `page_size` (integer, optional) — Maximum number of sessions per page
+- `page_token` (string, optional) — Pagination token from a previous response
 - `filter` (string, optional) — API filter expression
-- `oauth_token` (string, required) — Valid Google OAuth token
+```
 
 **Output:**
 
 ```json
 {
-  "result": "Array of participants with optional filtering"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/list_participants
-
-{
-  "parent": "conferenceRecords/abc123",
-  "page_size": 25,
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
+  "participantSessions": [
+    {
+      "name": "conferenceRecords/abc123/participants/xyz/participantSessions/session1",
+      "startTime": "2024-03-20T10:02:00.000Z",
+      "endTime": "2024-03-20T10:30:00.000Z"
+    }
+  ],
+  "nextPageToken": "token123"
 }
 ```
 
 </details>
 
 ---
-
-<details>
-<summary><code>get_participant_session</code> — Get a participant session by ID</summary>
-
-**Inputs:**
-
-- `name` (string, required) — Participant session resource name
-- `oauth_token` (string, required) — Valid Google OAuth token
-
-**Output:**
-
-```json
-{
-  "result": "Session details including start/end time and status"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/get_participant_session
-
-{
-  "name": "conferenceRecords/abc123/participants/xyz789/participantSessions/session-001",
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
-}
-```
-
-</details>
-
----
-
-<details>
-<summary><code>list_participant_sessions</code> — List participant sessions of a participant from a Google Meet conference record</summary>
-
-**Inputs:**
-
-- `parent` (string, required) — Parent participant resource name
-- `page_size` (integer, optional) — Max items per page
-- `page_token` (string, optional) — Pagination token
-- `filter` (string, optional) — API filter expression
-- `oauth_token` (string, required) — Valid Google OAuth token
-
-**Output:**
-
-```json
-{
-  "result": "Array of participant sessions"
-}
-```
-
-**Usage Example:**
-
-```bash
-POST /mcp/google-meet/list_participant_sessions
-
-{
-  "parent": "conferenceRecords/abc123/participants/xyz789",
-  "page_size": 50,
-  "oauth_token": "ya29.a0AfH6SMxxxxxxxxxxxxxx"
-}
-```
-
-</details>
-
----
-
-## Reference & Support
 
 <details>
 <summary><strong>API Parameters Reference</strong></summary>
 
-### Pagination
+### Common Parameters
 
-- `page_size` — Max results per page (1–100)
-- `page_token` — Token from previous response for next page
-- `filter` — CEL filter expression for results
+- `name` — Full resource name identifying a Meet object. Always returned in API responses and used as the identifier for subsequent calls.
+- `page_size` — Limits the number of items returned per page. If omitted, the API uses its default page size.
+- `page_token` — Token from a previous paginated response. Pass it to retrieve the next page of results.
+- `filter` — Standard API filter expression for narrowing list results.
 
-### Resource Formats
+### Resource Name Formats
 
-**Space Resource:**
+**Meeting Space:**
 
 ```
-spaces/{SPACE_ID}
+spaces/{spaceId}
 Example: spaces/abc-defg-hij
 ```
 
-**Conference Record Resource:**
+**Conference Record:**
 
 ```
-conferenceRecords/{RECORD_ID}
-Example: conferenceRecords/abc123def456ghi789
+conferenceRecords/{recordId}
+Example: conferenceRecords/abc123xyz
 ```
 
-**Participant Resource:**
+**Participant:**
 
 ```
-conferenceRecords/{RECORD_ID}/participants/{PARTICIPANT_ID}
-Example: conferenceRecords/abc123/participants/xyz789
+conferenceRecords/{recordId}/participants/{participantId}
+Example: conferenceRecords/abc123/participants/p456
 ```
 
-**Participant Session Resource:**
+**Participant Session:**
 
 ```
-conferenceRecords/{RECORD_ID}/participants/{PARTICIPANT_ID}/participantSessions/{SESSION_ID}
-Example: conferenceRecords/abc123/participants/xyz789/participantSessions/session-001
+conferenceRecords/{recordId}/participants/{participantId}/participantSessions/{sessionId}
+Example: conferenceRecords/abc123/participants/p456/participantSessions/s789
 ```
-
-</details>
-
----
-
-<details>
-<summary><strong>OAuth Guide</strong></summary>
-
-All tools require a valid Google OAuth token. Here's how to obtain one:
-
-### Step 1: Create Google Cloud Project
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the **Google Meet API**
-
-### Step 2: Create OAuth 2.0 Credentials
-
-1. Navigate to **Credentials** in Google Cloud Console
-2. Click **+ Create Credentials** → **OAuth client ID**
-3. Select your application type (Desktop, Web, or other)
-4. Download the credentials JSON file
-
-### Step 3: Authenticate with Google
-
-Use your Google account to authenticate and obtain the OAuth token. Refer to [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2) for detailed authentication steps specific to your use case.
-
-### Step 4: Required Scopes
-
-Ensure your OAuth token has these scopes:
-
-- `https://www.googleapis.com/auth/meetings.space.create` — Create meeting spaces
-- `https://www.googleapis.com/auth/meetings.space.readonly` — Read meeting spaces and records
-- `https://www.googleapis.com/auth/meetings.conference.readonly` — Read conference records
-- `https://www.googleapis.com/auth/meetings.participants.readonly` — Read participant data
 
 </details>
 
@@ -426,21 +335,28 @@ Ensure your OAuth token has these scopes:
 <details>
 <summary><strong>Troubleshooting</strong></summary>
 
-### **Missing or Invalid API Key**
+### **Missing or Invalid Headers**
 
 - **Cause:** API key not provided in request headers or incorrect format
 - **Solution:**
-  1. Verify `Authorization: Bearer YOUR_API_KEY` header is present
-  2. Check API key is active in your Curious Layer account
-  3. Regenerate API key if expired
+  1. Verify `Authorization: Bearer YOUR_API_KEY` and `X-Mewcp-Credential-Id: CREDENTIAL-ID` headers are present
+  2. Check API key is active in your MewCP account
 
 ### **Insufficient Credits**
 
-- **Cause:** API calls have exceeded your requests limits
+- **Cause:** API calls have exceeded your request limits
 - **Solution:**
   1. Check credit usage in your Curious Layer dashboard
   2. Upgrade to a paid plan or add credits for higher limits
   3. Contact support for credit adjustments
+
+### **Credential Not Connected**
+
+- **Cause:** No Google credential linked to your account
+- **Solution:**
+  1. Go to **Credentials** in your MewCP dashboard
+  2. Connect your Google account via OAuth
+  3. Retry the request with the correct `X-Mewcp-Credential-Id` header
 
 ### **Malformed Request Payload**
 
@@ -448,23 +364,23 @@ Ensure your OAuth token has these scopes:
 - **Solution:**
   1. Validate JSON syntax before sending
   2. Ensure all required tool parameters are included
-  3. Check parameter types match expected values (string, integer, etc.)
+  3. Check parameter types match expected values
 
 ### **Server Not Found**
 
 - **Cause:** Incorrect server name in the API endpoint
 - **Solution:**
-  1. Verify endpoint format: `/mcp/{server-name}/{tool-name}`
-  2. Use lowercase server name: `/mcp/google-meet/...`
-  3. Check available servers in documentation
+  1. Verify endpoint format: `{server-name}/mcp/{tool-name}`
+  2. Use correct server name from documentation
+  3. Check available servers in your Curious Layer account
 
-### **OAuth Token Invalid or Expired**
+### **Google Meet API Error**
 
-- **Cause:** Token rejected by Google API or has expired
+- **Cause:** Upstream Google Meet API returned an error
 - **Solution:**
-  1. Obtain a fresh OAuth token from Google
-  2. Verify token has all required scopes
-  3. Check token expiration and refresh if needed
+  1. Check Google service status at [Google Workspace Status Page](https://www.google.com/appsstatus)
+  2. Verify your credential has the required Meet permissions
+  3. Review the error message for specific details
 
 </details>
 
@@ -473,11 +389,9 @@ Ensure your OAuth token has these scopes:
 <details>
 <summary><strong>Resources</strong></summary>
 
-- **[Google Meet API Documentation](https://developers.google.com/meet/api/guides)** — Official API reference
-- **[Google Cloud OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)** — Authentication setup guide
-- **[Google Meet API Reference](https://developers.google.com/meet/api/v2/reference)** — Complete API endpoint reference
+- **[Google Meet API Documentation](https://developers.google.com/meet/api/guides/overview)** — Official API reference
+- **[Google Meet API Reference](https://developers.google.com/meet/api/reference/rest)** — Complete endpoint reference
 - **[FastMCP Docs](https://gofastmcp.com/v2/getting-started/welcome)** — FastMCP specification
+- **[FastMCP Credentials](https://pypi.org/project/fastmcp-credentials/)** — FastMCP Credentials package for credential handling
 
 </details>
-
----
